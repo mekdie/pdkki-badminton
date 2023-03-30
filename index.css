@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap");
+
+body {
+    font-family: "Muli", sans-serif;
+    background-color: #d3d2e9;
+    padding: 20px;
+}
+.container {
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 20px;
+}
