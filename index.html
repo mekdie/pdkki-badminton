@@ -43,45 +43,13 @@
             rel="manifest"
             href="https://raw.githubusercontent.com/mekdie/pdkki-badminton/main/public/site.webmanifest"
         />
-        <style>
-            body {
-                font-family: "Muli", sans-serif;
-                background-color: #d3d2e9;
-                padding: 20px;
-            }
-
-            form {
-                background-color: #ffffff;
-                border-radius: 5px;
-                padding: 20px;
-                max-width: 500px;
-                margin: 0 auto;
-            }
-
-            label {
-                display: block;
-                margin-bottom: 10px;
-                font-weight: bold;
-            }
-
-            @media (max-width: 767px) {
-                .btn-block {
-                    width: 100%;
-                }
-            }
-            .custom-radio {
-                font-weight: normal;
-            }
-            .required.form-label:after {
-                content: "*";
-                color: red;
-            }
-        </style>
+        <link rel="stylesheet" href="index.css" />
     </head>
     <body>
         <a class="btn btn-link" href="login.html">Log In (Admin)</a>
         <a class="btn btn-link" href="index.html">Registration Form</a>
         <a class="btn btn-link" href="participants.html"> Participants </a>
+        <button class="btn toggle">Dark Mode</button>
         <div class="container">
             <form>
                 <h3>PDKKI Badminton Registration &#127992;</h3>
@@ -260,4 +228,5 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
     </body>
+    <script src="darkmode.js"></script>
 </html>

@@ -1,12 +1,61 @@
 @import url("https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap");
 
+:root {
+    --text-color: black;
+    --primary-color: #d3d2e9;
+    --secondary-color: white;
+}
+
+html.dark {
+    --text-color: white;
+    --primary-color: steelblue;
+    --secondary-color: rgba(0, 0, 0, 0.4);
+}
+html.dark {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.toggle {
+    border: 0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
 body {
+    color: var(--text-color);
     font-family: "Muli", sans-serif;
-    background-color: #d3d2e9;
+    background-color: var(--primary-color);
     padding: 20px;
 }
-.container {
-    background-color: #ffffff;
+.participants-container {
+    background-color: var(--secondary-color);
     border-radius: 5px;
     padding: 20px;
+}
+form {
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+@media (max-width: 767px) {
+    .btn-block {
+        width: 100%;
+    }
+}
+.custom-radio {
+    font-weight: normal;
+}
+.required.form-label:after {
+    content: "*";
+    color: red;
 }
