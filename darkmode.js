@@ -24,8 +24,7 @@ function changeThemeTo(theme = "default") {
     } else {
         localStorage.setItem("theme", "light");
 
-        html.classList.add("table-light");
-        html.classList.remove("dark");
+        table.classList.add("table-light");
 
         toggleEl.innerHTML = "Dark mode";
         toggleEl.classList.add("btn-light");
@@ -51,7 +50,7 @@ toggleEl.addEventListener("click", (e) => {
 
         table.classList.remove("table-light");
         table.classList.add("table-dark");
-        e.target.innerHTML = "light mode";
+        e.target.innerHTML = "Light mode";
 
         toggleEl.classList.remove("btn-light");
         toggleEl.classList.add("btn-dark");
