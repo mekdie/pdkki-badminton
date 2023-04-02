@@ -28,7 +28,7 @@ const RegistrationForm = () => {
         console.log(data);
         await addDoc(usersCollectionRef, { data });
 
-        navigate("/confirmation");
+        navigate("/confirmation", { state: { data } });
     };
 
     //update user to update the paid fields (next dev)
