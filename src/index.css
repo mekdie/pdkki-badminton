@@ -59,3 +59,10 @@ label {
     content: "*";
     color: red;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    margin-left: -20px;
+}

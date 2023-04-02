@@ -14,21 +14,20 @@ const FormDetails = () => {
                         role="heading"
                         aria-level="1"
                     >
-                        PDKKI Movie Night 25 February 2023
+                        PDKKI Badminton Session xxxxxxx
                     </div>
                 </div>
                 <div className="cBGGJ OIC90c" dir="auto">
-                    It’s time to pop the corn! 💥🍿
+                    Let's start 2023 with some exercise - Badminton &#127992;
                     <br />
-                    Join us in taking a journey to the quantum realm 🫧
+                    It’s time to smash and bash the shuttle!
                     <br />
-                    <br />
-                    PDKKI invites you to our first movie night of the year:{" "}
+                    PDKKI invites you to our:
                     <br />
                     <span style={{ fontWeight: 700 }}>
-                        Ant-Man and the Wasp: Quantumania
-                    </span>
-                    🐜
+                        Badminton Session
+                    </span>{" "}
+                    at the Quantum Realm 🐜
                     <div>
                         <br />
                         📅 Saturday, 25 February
