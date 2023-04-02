@@ -1,7 +1,22 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
 import { Button, Container, Form } from "react-bootstrap";
-
+import FormDetails from "./FormDetails";
 const RegistrationForm = () => {
+    const [data, setData] = useState({ racquets: "Yes", level: "beginner" });
+
+    const usersCollectionRef = collection(db, "users");
+
+    const updateData = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
+    };
+    const addUser = async (e) => {
+        e.preventDefault();
+        //getting data of submitted form
+        console.log(data);
+        // await setDoc(usersCollectionRef, {name: });
+    };
     return (
         <>
             {/* <a className="btn btn-link" href="login.html">
@@ -16,112 +31,17 @@ const RegistrationForm = () => {
             </a> */}
             {/* <button className="btn toggle">Dark Mode</button> */}
             <Container>
-                <Form>
-                    <h3>PDKKI Badminton Registration &#127992;</h3>
-                    <hr />
-                    <div className="N0gd6">
-                        <div className="ahS2Le">
-                            <div
-                                className="F9yp7e ikZYwf LgNcQe"
-                                dir="auto"
-                                role="heading"
-                                aria-level="1"
-                            >
-                                PDKKI Movie Night 25 February 2023
-                            </div>
-                        </div>
-                        <div className="cBGGJ OIC90c" dir="auto">
-                            It’s time to pop the corn! 💥🍿
-                            <br />
-                            Join us in taking a journey to the quantum realm 🫧
-                            <br />
-                            <br />
-                            PDKKI invites you to our first movie night of the
-                            year: <br />
-                            <span style={{ fontWeight: 700 }}>
-                                Ant-Man and the Wasp: Quantumania
-                            </span>
-                            🐜
-                            <div>
-                                <br />
-                                📅 Saturday, 25 February
-                                <br />⏱ 6.30pm
-                                <br />
-                                📍 HOYTS Melbourne Central
-                                <br />
-                                <div>
-                                    Cnr Swanston &amp;, La Trobe St, Melbourne
-                                    VIC 3000 (Level 3)
-                                </div>
-                                <div>
-                                    <br />
-                                    Fee: $23 (adult) // $20 (student)
-                                    <br />
-                                </div>
-                                <div>
-                                    <br />
-                                </div>
-                                <div>
-                                    Latest RSVP by Friday, 24 February&nbsp;
-                                    <i>(or until sold out).</i>
-                                </div>
-                                <div>
-                                    <br />
-                                </div>
-                                <div>
-                                    Transfer can be made to:
-                                    <br />
-                                    BSB: XXXXXX
-                                    <br />
-                                    Acc: XXXX XXXX
-                                    <br />
-                                    Description: Name - Antman
-                                    <br />
-                                </div>
-                                <div>
-                                    <br />
-                                </div>
-                                <div>
-                                    Send receipt to: PDKKI Instagram
-                                    (@pdkkimelbourne)
-                                    <div>
-                                        <i>Follow us if you haven't! ;)</i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <i>
-                                        <br />
-                                    </i>
-                                </div>
-                                <div>
-                                    <div>
-                                        If you have any questions, please feel
-                                        free to reach out to us or our contact
-                                        person.
-                                    </div>
-                                    <div>💁🏻‍♀: Anonymous</div>
-                                </div>
-                                <div>
-                                    <b>
-                                        <br />
-                                    </b>
-                                    <div>
-                                        Looking forward to travel the quantum
-                                        realm together😎
-                                        <br />
-                                        <br />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <Form onSubmit={addUser}>
+                    <FormDetails />
                     <hr></hr>
                     <Form.Group className="mb-3" controlId="name">
                         <Form.Label className="required">Name</Form.Label>
                         <Form.Control
+                            name="name"
                             type="text"
                             placeholder="Enter name"
                             required
+                            onChange={updateData}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="email">
@@ -129,50 +49,73 @@ const RegistrationForm = () => {
                             Email address
                         </Form.Label>
                         <Form.Control
+                            name="email"
                             type="email"
                             placeholder="Enter email"
                             required
+                            onChange={updateData}
                         />
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
+                    <Form.Group className="mb-3" controlId="phone">
                         <Form.Label className="required">
                             Phone Number
                         </Form.Label>
                         <Form.Control
+                            name="phone"
                             type="number"
                             placeholder="Enter phone number"
                             required
+                            onChange={updateData}
                         />
                         <Form.Text className="text-muted">
                             We'll never share your contact with anyone else.
                         </Form.Text>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="racquets">
-                        <Form.Label>
+                        <Form.Label className="required">
                             Can you bring your own racquets?
                         </Form.Label>
                         <div className="mb-3">
-                            <Form.Check inline name="racquets" type="radio">
-                                <Form.Check.Input type={"radio"} checked />
+                            <Form.Check inline required>
+                                <Form.Check.Input
+                                    type={"radio"}
+                                    name="racquets"
+                                    onChange={updateData}
+                                    value="Yes"
+                                    required
+                                />
                                 <Form.Check.Label className="custom-radio">
                                     Yes
                                 </Form.Check.Label>
                             </Form.Check>
-                            <Form.Check inline name="racquets">
-                                <Form.Check.Input type={"radio"} />
+                            <Form.Check inline>
+                                <Form.Check.Input
+                                    type={"radio"}
+                                    name="racquets"
+                                    onChange={updateData}
+                                    value="No"
+                                    required
+                                />
                                 <Form.Check.Label className="custom-radio">
                                     No
                                 </Form.Check.Label>
                             </Form.Check>
                         </div>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="racquets">
+                    <Form.Group className="mb-3" controlId="level">
                         <Form.Label>Your level</Form.Label>
-                        <Form.Select className="mb-3" controlId="level">
-                            <option value="beginner">Beginner</option>
+                        <Form.Select
+                            name="level"
+                            className="mb-3"
+                            controlId="level"
+                            onChange={updateData}
+                        >
+                            <option value="beginner" selected>
+                                Beginner
+                            </option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </Form.Select>
