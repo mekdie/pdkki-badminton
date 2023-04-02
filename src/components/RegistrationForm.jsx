@@ -6,7 +6,13 @@ import FormDetails from "./FormDetails";
 
 import { useNavigate } from "react-router";
 
+//recaptcha
+import ReCAPTCHA from "react-google-recaptcha";
+
+const SECRET_KEY = process.env.REACT_APP_CAPTCHA_SITE_KEY;
 const RegistrationForm = () => {
+    const [isVerified, setIsVerified] = useState(false);
+
     const navigate = useNavigate();
 
     const [data, setData] = useState({
@@ -25,10 +31,21 @@ const RegistrationForm = () => {
     const addUser = async (e) => {
         e.preventDefault();
         //getting data of submitted form
-        console.log(data);
-        await addDoc(usersCollectionRef, { data });
+        if (isVerified) {
+            // submit the form
+            console.log(data);
+            await addDoc(usersCollectionRef, { data });
+            navigate("/confirmation", { state: { data } });
+        } else {
+            alert("Please verify that you are not a robot.");
+        }
+    };
 
-        navigate("/confirmation", { state: { data } });
+    //captcha
+    const handleCaptchaVerify = (response) => {
+        if (response) {
+            setIsVerified(true);
+        }
     };
 
     //update user to update the paid fields (next dev)
@@ -140,7 +157,15 @@ const RegistrationForm = () => {
                             <option value="advanced">Advanced</option>
                         </Form.Select>
                     </Form.Group>
-
+                    <Form.Group className="mb-3" controlId="level">
+                        <Form.Label>Payment invoice upload</Form.Label>
+                        <h6>TBA v1.x</h6>
+                    </Form.Group>
+                    <ReCAPTCHA
+                        className="mb-3"
+                        sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
+                        onChange={handleCaptchaVerify}
+                    />
                     {/* file upload here in the future  */}
                     <Button variant="dark" type="submit">
                         Submit

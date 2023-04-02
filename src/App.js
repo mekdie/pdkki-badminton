@@ -1,5 +1,6 @@
 import ConfirmationForm from "./components/ConfirmationForm";
 import RegistrationForm from "./components/RegistrationForm";
+import Participants from "./components/Participants";
 import { Routes, Route } from "react-router-dom";
 function App() {
     return (
@@ -8,6 +9,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<RegistrationForm />} />
                 <Route path="/confirmation" element={<ConfirmationForm />} />
+                <Route path="/pdkki-participants" element={<Participants />} />
             </Routes>
         </div>
     );

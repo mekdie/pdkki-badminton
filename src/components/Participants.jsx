@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase-config";
+import { db } from "../firebase-config";
+
+import { Container, Table } from "react-bootstrap";
 function App() {
     const [users, setUsers] = useState([]);
 
@@ -19,16 +20,44 @@ function App() {
         getUsers();
     }, []);
 
+    let counter = 1;
+
     return (
         <div className="App">
-            {" "}
-            {users.map((user) => {
-                return (
-                    <div>
-                        <h1>Name: {user.name}</h1>
-                    </div>
-                );
-            })}
+            <Container className="participants-container">
+                <div class="row justify-content-center">
+                    <Table responsive striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Racquets</th>
+                                <th>Level</th>
+                                <th>Payment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id}>
+                                    <td>{counter++}</td>
+                                    <td>{user.data.name}</td>
+                                    <td>{user.data.email}</td>
+                                    <td>{user.data.phone}</td>
+                                    <td>{user.data.racquets}</td>
+                                    <td>{user.data.level}</td>
+                                    <td>
+                                        {user.data.paid ? "Paid" : "Unpaid"}
+                                    </td>
+                                    <td>TBA v1.x</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+            </Container>
         </div>
     );
 }
