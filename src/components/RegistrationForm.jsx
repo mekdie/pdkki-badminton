@@ -1,22 +1,35 @@
 import { useState, useEffect } from "react";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "./FormDetails";
 const RegistrationForm = () => {
-    const [data, setData] = useState({ racquets: "Yes", level: "beginner" });
+    const [data, setData] = useState({
+        racquets: "Yes",
+        level: "beginner",
+        paid: false,
+    });
 
     const usersCollectionRef = collection(db, "users");
 
     const updateData = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
+
+    //add user
     const addUser = async (e) => {
         e.preventDefault();
         //getting data of submitted form
         console.log(data);
-        // await setDoc(usersCollectionRef, {name: });
+        await addDoc(usersCollectionRef, { data });
     };
+
+    //update user to update the paid fields (next dev)
+    // const updateUser = async (id) => {
+    //     const userDoc = doc(db, "users", id);
+    //     const paid = { paid: !paid };
+    //     await updateDoc(userDoc, paid);
+    // };
     return (
         <>
             {/* <a className="btn btn-link" href="login.html">
