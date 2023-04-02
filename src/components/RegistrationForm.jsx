@@ -3,7 +3,12 @@ import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "./FormDetails";
+
+import { useNavigate } from "react-router";
+
 const RegistrationForm = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState({
         racquets: "Yes",
         level: "beginner",
@@ -22,6 +27,8 @@ const RegistrationForm = () => {
         //getting data of submitted form
         console.log(data);
         await addDoc(usersCollectionRef, { data });
+
+        navigate("/confirmation");
     };
 
     //update user to update the paid fields (next dev)
