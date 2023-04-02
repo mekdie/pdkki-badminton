@@ -34,7 +34,7 @@ const RegistrationForm = () => {
         if (isVerified) {
             // submit the form
             console.log(data);
-            await addDoc(usersCollectionRef, { data });
+            await addDoc(usersCollectionRef, data);
             navigate("/confirmation", { state: { data } });
         } else {
             alert("Please verify that you are not a robot.");
@@ -48,12 +48,6 @@ const RegistrationForm = () => {
         }
     };
 
-    //update user to update the paid fields (next dev)
-    // const updateUser = async (id) => {
-    //     const userDoc = doc(db, "users", id);
-    //     const paid = { paid: !paid };
-    //     await updateDoc(userDoc, paid);
-    // };
     return (
         <>
             {/* <a className="btn btn-link" href="login.html">
