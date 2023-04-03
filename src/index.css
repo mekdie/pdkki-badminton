@@ -27,7 +27,6 @@ body {
     color: var(--text-color);
     font-family: "Muli", sans-serif;
     background-color: var(--primary-color);
-    padding: 20px;
 }
 .participants-container {
     background-color: var(--secondary-color);
@@ -60,8 +59,21 @@ label {
     color: red;
 }
 
+#root {
+    padding: 20px;
+}
 .footer {
-    left: 0;
-    bottom: 0;
-    width: 100%;
+    margin: -20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.footer-content {
+    align-items: center;
+}
+
+.footer-content p {
+    margin: 0 10px;
 }

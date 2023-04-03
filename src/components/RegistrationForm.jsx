@@ -161,11 +161,12 @@ const RegistrationForm = () => {
                         <Form.Label>Payment invoice upload</Form.Label>
                         <h6>TBA v1.x</h6>
                     </Form.Group>
-                    <ReCAPTCHA
-                        className="mb-3"
-                        sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
-                        onChange={handleCaptchaVerify}
-                    />
+                    <Form.Group className="mb-3">
+                        <ReCAPTCHA
+                            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
+                            onChange={handleCaptchaVerify}
+                        />
+                    </Form.Group>
                     {/* file upload here in the future  */}
                     <Button variant="dark" type="submit">
                         Submit

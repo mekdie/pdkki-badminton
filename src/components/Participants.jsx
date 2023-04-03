@@ -54,7 +54,7 @@ function App() {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Time</th>
+                                <th>Timestamp</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
