@@ -9,7 +9,9 @@ import { useNavigate } from "react-router";
 //recaptcha
 import ReCAPTCHA from "react-google-recaptcha";
 
-const SECRET_KEY = process.env.REACT_APP_CAPTCHA_SITE_KEY;
+//timestamp
+import { serverTimestamp } from "firebase/firestore";
+
 const RegistrationForm = () => {
     const [isVerified, setIsVerified] = useState(false);
 
@@ -24,7 +26,11 @@ const RegistrationForm = () => {
     const usersCollectionRef = collection(db, "users");
 
     const updateData = (e) => {
-        setData({ ...data, [e.target.name]: e.target.value });
+        setData({
+            ...data,
+            [e.target.name]: e.target.value,
+            timestamp: serverTimestamp(),
+        });
     };
 
     //add user

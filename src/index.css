@@ -60,9 +60,8 @@ label {
     color: red;
 }
 
-footer {
-    position: fixed;
+.footer {
+    left: 0;
     bottom: 0;
-    width: 100vw;
-    margin-left: -20px;
+    width: 100%;
 }

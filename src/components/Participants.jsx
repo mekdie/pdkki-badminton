@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    doc,
+    updateDoc,
+    deleteDoc,
+} from "firebase/firestore";
 import { db } from "../firebase-config";
 
 import { Container, Table, Button } from "react-bootstrap";
@@ -32,6 +38,14 @@ function App() {
         getUsers();
     };
 
+    //delete user
+    const deleteUser = async (id) => {
+        const userDoc = doc(db, "users", id);
+
+        await deleteDoc(userDoc);
+        getUsers();
+    };
+
     return (
         <div className="App">
             <Container className="participants-container">
@@ -40,6 +54,7 @@ function App() {
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Time</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
@@ -53,6 +68,11 @@ function App() {
                             {users.map((user) => (
                                 <tr className="align-middle" key={user.id}>
                                     <td>{counter++}</td>
+                                    <td>
+                                        {user.timestamp
+                                            .toDate()
+                                            .toLocaleString()}
+                                    </td>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
                                     <td>{user.phone}</td>
@@ -69,6 +89,11 @@ function App() {
                                             }
                                         >
                                             {user.paid ? "Unpaid" : "Paid"}
+                                        </Button>
+                                        <Button
+                                            onClick={() => deleteUser(user.id)}
+                                        >
+                                            Delete
                                         </Button>
                                     </td>
                                 </tr>
