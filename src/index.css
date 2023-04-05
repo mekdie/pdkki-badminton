@@ -46,11 +46,6 @@ label {
     font-weight: bold;
 }
 
-@media (max-width: 767px) {
-    .btn-block {
-        width: 100%;
-    }
-}
 .custom-radio {
     font-weight: normal;
 }
@@ -59,21 +54,40 @@ label {
     color: red;
 }
 
-#root {
-    padding: 20px;
-}
-.footer {
-    margin: -20px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    text-align: center;
+#page-container {
+    padding-top: 2rem;
+    position: relative;
+    min-height: 100vh;
 }
 
-.footer-content {
+/* 2 rem top + 4 rem bot */
+#content-wrap {
+    padding-bottom: 6rem;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4rem;
+    display: flex;
     align-items: center;
+    text-align: center;
 }
 
 .footer-content p {
     margin: 0 10px;
+}
+
+/* medium sized width */
+@media (max-width: 767px) {
+    .btn-block {
+        width: 100%;
+    }
+    #content-wrap {
+        padding-bottom: 8rem;
+    }
+    .footer {
+        height: 6rem;
+    }
 }

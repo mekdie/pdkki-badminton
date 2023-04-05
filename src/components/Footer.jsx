@@ -6,7 +6,7 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 const Footer = () => {
     return (
         <footer className="footer bg-light py-3">
-            <Container className="footer-content text-center">
+            <Container className="footer-content">
                 <p className="text-muted">
                     Copyright © 2023 McDony Lee -{" "}
                     <FontAwesomeIcon icon={faGithub} color="black" />{" "}
@@ -17,8 +17,10 @@ const Footer = () => {
                         rel="noopener noreferrer"
                     >
                         Mekdie
-                    </a>
-                    . All rights reserved. - Version 1.1 Alpha
+                    </a>{" "}
+                    <span className="text-nowrap">
+                        All rights reserved. - Version 1.1 Alpha
+                    </span>
                 </p>
             </Container>
         </footer>
