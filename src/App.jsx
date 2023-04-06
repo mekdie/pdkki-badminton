@@ -14,10 +14,7 @@ function App() {
                         path="/confirmation"
                         element={<ConfirmationForm />}
                     />
-                    <Route
-                        path="/pdkki-participants"
-                        element={<Participants />}
-                    />
+                    <Route path="/participants" element={<Participants />} />
                 </Routes>
             </div>
             <Footer />

@@ -46,6 +46,40 @@ function App() {
         getUsers();
     };
 
+    const renderElement = () => {
+        if (users.length > 0) {
+            return users.map((user) => (
+                <tr className="align-middle" key={user.id}>
+                    <td>{counter++}</td>
+                    <td>{user.timestamp.toDate().toLocaleString()}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.phone}</td>
+                    <td>{user.racquets}</td>
+                    <td>{user.level}</td>
+                    <td>{user.paid ? "Paid" : "Unpaid"}</td>
+                    <td>
+                        <Button
+                            onClick={() => updateUser(user.id, user.paid)}
+                            variant={user.paid ? "dark" : "success"}
+                        >
+                            {user.paid ? "Unpaid" : "Paid"}
+                        </Button>
+                        <Button onClick={() => deleteUser(user.id)}>
+                            Delete
+                        </Button>
+                    </td>
+                </tr>
+            ));
+        } else {
+            return (
+                <tr className="align-middle text-center">
+                    <td colSpan={9}>No participants found</td>
+                </tr>
+            );
+        }
+    };
+
     return (
         <div className="App">
             <Container className="participants-container">
@@ -64,41 +98,7 @@ function App() {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr className="align-middle" key={user.id}>
-                                    <td>{counter++}</td>
-                                    <td>
-                                        {user.timestamp
-                                            .toDate()
-                                            .toLocaleString()}
-                                    </td>
-                                    <td>{user.name}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.phone}</td>
-                                    <td>{user.racquets}</td>
-                                    <td>{user.level}</td>
-                                    <td>{user.paid ? "Paid" : "Unpaid"}</td>
-                                    <td>
-                                        <Button
-                                            onClick={() =>
-                                                updateUser(user.id, user.paid)
-                                            }
-                                            variant={
-                                                user.paid ? "dark" : "success"
-                                            }
-                                        >
-                                            {user.paid ? "Unpaid" : "Paid"}
-                                        </Button>
-                                        <Button
-                                            onClick={() => deleteUser(user.id)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+                        <tbody>{renderElement()}</tbody>
                     </Table>
                 </div>
             </Container>
