@@ -8,17 +8,18 @@ function PasscodeInput({ onSubmit, wrongPasscode }) {
     const passcodeRef = useRef(undefined);
 
     return (
-        <>
-            <Stack direction="horizontal" gap={2}>
+        <Form onSubmit={(e) => onSubmit(e, passcodeRef.current.value)}>
+            <Stack
+                style={{ marginBottom: "0.5rem" }}
+                direction="horizontal"
+                gap={2}
+            >
                 <Form.Control
                     className="me-auto"
                     placeholder="Enter passcode to access this page..."
                     ref={passcodeRef}
                 />
-                <Button
-                    onClick={() => onSubmit(passcodeRef.current.value)}
-                    variant="secondary"
-                >
+                <Button type="submit" variant="secondary">
                     Submit
                 </Button>
                 {/* <div className="vr" /> */}
@@ -29,7 +30,7 @@ function PasscodeInput({ onSubmit, wrongPasscode }) {
                     Please enter a valid passcode
                 </Form.Text>
             )}
-        </>
+        </Form>
     );
 }
 

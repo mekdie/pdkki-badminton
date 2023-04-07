@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function NavigationBar() {
     return (
@@ -12,16 +12,16 @@ function NavigationBar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link as={Link} to="/">
+                        <Nav.Link as={NavLink} to="/">
                             Home
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/about">
+                        <Nav.Link as={NavLink} to="/about" disabled>
                             About
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/participants">
+                        <Nav.Link as={NavLink} to="/participants">
                             Participants
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/contact">
+                        <Nav.Link as={NavLink} to="/contact" disabled>
                             Contact
                         </Nav.Link>
                         {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">

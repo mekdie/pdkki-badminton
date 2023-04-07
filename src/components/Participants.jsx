@@ -65,7 +65,8 @@ function App() {
         await deleteDoc(userDoc);
         getUsers();
     };
-    const handlePasscodeSubmit = (inputValue) => {
+    const handlePasscodeSubmit = (e, inputValue) => {
+        e.preventDefault();
         if (inputValue === passcode) {
             setPasscodeFlag(true);
         } else {
