@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
 import {
     collection,
+    getDoc,
     getDocs,
     doc,
     updateDoc,
     deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
-
 import { Container, Table, Button } from "react-bootstrap";
+
+import PasscodeInput from "./PasscodeInput";
+
 function App() {
     const [users, setUsers] = useState([]);
+
+    const [passcode, setPasscode] = useState(null);
+    const [passcodeFlag, setPasscodeFlag] = useState(false);
+    const [passcodeValidation, setPasscodeValidation] = useState(true);
 
     const usersCollectionRef = collection(db, "users");
 
@@ -19,11 +26,24 @@ function App() {
         // console.log(data.docs[0].data());
         setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
+
+    const getPagePasscode = async () => {
+        const passcodeDoc = doc(
+            db,
+            "passcode",
+            process.env.REACT_APP_PARTICIPANTS_PASSCODE_ID
+        );
+        const docSnap = await getDoc(passcodeDoc);
+
+        setPasscode(docSnap.data().participants);
+    };
+
     useEffect(() => {
         // reference:
         // https://firebase.google.com/docs/firestore/query-data/get-data
 
         getUsers();
+        getPagePasscode();
     }, []);
 
     let counter = 1;
@@ -45,8 +65,44 @@ function App() {
         await deleteDoc(userDoc);
         getUsers();
     };
+    const handlePasscodeSubmit = (inputValue) => {
+        if (inputValue === passcode) {
+            setPasscodeFlag(true);
+        } else {
+            setPasscodeValidation(false);
+        }
+    };
+    const renderElements = () => {
+        if (passcodeFlag) {
+            return (
+                <Table responsive striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Racquets</th>
+                            <th>Level</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>{renderParticipants()}</tbody>
+                </Table>
+            );
+        } else {
+            return (
+                <PasscodeInput
+                    onSubmit={handlePasscodeSubmit}
+                    wrongPasscode={passcodeValidation}
+                />
+            );
+        }
+    };
 
-    const renderElement = () => {
+    const renderParticipants = () => {
         if (users.length > 0) {
             return users.map((user) => (
                 <tr className="align-middle" key={user.id}>
@@ -83,23 +139,8 @@ function App() {
     return (
         <div className="App">
             <Container className="participants-container">
-                <div class="row justify-content-center">
-                    <Table responsive striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Timestamp</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Racquets</th>
-                                <th>Level</th>
-                                <th>Payment</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>{renderElement()}</tbody>
-                    </Table>
+                <div className="row justify-content-center">
+                    {renderElements()}
                 </div>
             </Container>
         </div>

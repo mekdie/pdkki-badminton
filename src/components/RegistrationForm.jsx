@@ -4,7 +4,7 @@ import { db } from "../firebase-config";
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "./FormDetails";
 
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 
 //recaptcha
 import ReCAPTCHA from "react-google-recaptcha";

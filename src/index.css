@@ -55,13 +55,14 @@ label {
 }
 
 #page-container {
-    padding-top: 2rem;
+    /* padding-bottom: 2rem; */
     position: relative;
     min-height: 100vh;
 }
 
 /* 2 rem top + 4 rem bot */
 #content-wrap {
+    margin-top: 2rem;
     padding-bottom: 6rem;
 }
 
@@ -90,4 +91,14 @@ label {
     .footer {
         height: 6rem;
     }
+    .participants-container {
+        width: 90%;
+    }
+}
+
+/* passcode input box */
+.passcode-input-box-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
