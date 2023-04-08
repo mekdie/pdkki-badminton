@@ -102,3 +102,7 @@ label {
     justify-content: center;
     align-items: center;
 }
+
+#loadingParticipants {
+    margin: auto;
+}

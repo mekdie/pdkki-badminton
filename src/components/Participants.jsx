@@ -9,8 +9,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Container, Table, Button } from "react-bootstrap";
-
 import PasscodeInput from "./PasscodeInput";
+import { scale } from "../Helpers";
+//react loading
+import ReactLoading from "react-loading";
 
 function App() {
     const [users, setUsers] = useState([]);
@@ -20,6 +22,9 @@ function App() {
     const [passcodeValidation, setPasscodeValidation] = useState(true);
 
     const usersCollectionRef = collection(db, "users");
+
+    // const [loading, setLoading] = useState(false);
+    const [loadingProgress, setLoadingProgress] = useState(0);
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -69,6 +74,24 @@ function App() {
         e.preventDefault();
         if (inputValue === passcode) {
             setPasscodeFlag(true);
+            //set an artificial loading
+            var i = 1;
+            function artificialLoading() {
+                //run every 1ms to 50 times
+                setTimeout(function () {
+                    if (i < 50) {
+                        setLoadingProgress(scale(i, 0, 50, 0, 50).toFixed(0));
+                        console.log(i);
+                        i++;
+                        artificialLoading();
+                    } else {
+                        //100% flick
+                        setLoadingProgress(100);
+                        // setTimeout(() => setLoading(false), 100);
+                    }
+                }, 1);
+            }
+            artificialLoading();
         } else {
             setPasscodeValidation(false);
         }
@@ -76,22 +99,38 @@ function App() {
     const renderElements = () => {
         if (passcodeFlag) {
             return (
-                <Table responsive striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Timestamp</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Racquets</th>
-                            <th>Level</th>
-                            <th>Payment</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>{renderParticipants()}</tbody>
-                </Table>
+                <>
+                    <Table responsive striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Timestamp</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Racquets</th>
+                                <th>Level</th>
+                                <th>Payment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loadingProgress !== 100 ? (
+                                <tr className="align-middle text-center">
+                                    <td colSpan={9}>
+                                        <ReactLoading
+                                            id="loadingParticipants"
+                                            type="bars"
+                                            color="grey"
+                                        />{" "}
+                                    </td>
+                                </tr>
+                            ) : (
+                                renderParticipants()
+                            )}
+                        </tbody>
+                    </Table>
+                </>
             );
         } else {
             return (
