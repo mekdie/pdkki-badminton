@@ -8,7 +8,7 @@ import {
     deleteDoc,
 } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
-import { ref, getDownloadURL } from "firebase/storage";
+import { ref, deleteObject } from "firebase/storage";
 import { Container, Table, Button } from "react-bootstrap";
 import PasscodeInput from "./PasscodeInput";
 import { scale } from "../Helpers";
@@ -26,9 +26,6 @@ function App() {
 
     // const [loading, setLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
-
-    //images state
-    const [imageUrl, setImageUrl] = useState("");
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -72,6 +69,12 @@ function App() {
         const userDoc = doc(db, "users", id);
 
         await deleteDoc(userDoc);
+        //delete image from database
+        const imageRef = ref(storage, `invoices/${id}`);
+        deleteObject(imageRef).then(() => {
+            console.log("user deleted");
+        });
+
         getUsers();
     };
     const handlePasscodeSubmit = (e, inputValue) => {
@@ -146,44 +149,39 @@ function App() {
         }
     };
 
-    const getInvoice = (userId) => {
-        const imageRef = ref(storage, `invoices/${userId}`);
-        getDownloadURL(imageRef).then((url) => {
-            console.log(url);
-            setImageUrl(url);
-        });
-    };
-
-    getInvoice("ozQGfhGGHCIVyFM3DxMh");
-
     const renderParticipants = () => {
         if (users.length > 0) {
-            return users.map((user) => (
-                <tr className="align-middle" key={user.id}>
-                    <td>{counter++}</td>
-                    <td>{user.timestamp.toDate().toLocaleString()}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone}</td>
-                    <td>{user.racquets}</td>
-                    <td>{user.level}</td>
-                    <td>
-                        <img src={imageUrl} alt={`${user.name} invoice`} />
-                    </td>
-                    <td>{user.paid ? "Paid" : "Unpaid"}</td>
-                    <td>
-                        <Button
-                            onClick={() => updateUser(user.id, user.paid)}
-                            variant={user.paid ? "dark" : "success"}
-                        >
-                            {user.paid ? "Unpaid" : "Paid"}
-                        </Button>
-                        <Button onClick={() => deleteUser(user.id)}>
-                            Delete
-                        </Button>
-                    </td>
-                </tr>
-            ));
+            return users.map((user) => {
+                return (
+                    <tr className="align-middle" key={user.id}>
+                        <td>{counter++}</td>
+                        <td>{user.timestamp.toDate().toLocaleString()}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phone}</td>
+                        <td>{user.racquets}</td>
+                        <td>{user.level}</td>
+                        <td className="table-cell-image">
+                            <img
+                                src={user.imageUrl}
+                                alt={`${user.name} invoice`}
+                            />
+                        </td>
+                        <td>{user.paid ? "Paid" : "Unpaid"}</td>
+                        <td>
+                            <Button
+                                onClick={() => updateUser(user.id, user.paid)}
+                                variant={user.paid ? "dark" : "success"}
+                            >
+                                {user.paid ? "Unpaid" : "Paid"}
+                            </Button>
+                            <Button onClick={() => deleteUser(user.id)}>
+                                Delete
+                            </Button>
+                        </td>
+                    </tr>
+                );
+            });
         } else {
             return (
                 <tr className="align-middle text-center">

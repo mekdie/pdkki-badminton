@@ -6,7 +6,6 @@ import { Table } from "react-bootstrap";
 const ConfirmationForm = () => {
     const location = useLocation();
 
-    console.log(location);
     return location.state ? (
         <div>
             <Container>

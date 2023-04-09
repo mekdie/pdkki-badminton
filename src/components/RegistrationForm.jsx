@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, upd } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
 
-import { ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "./FormDetails";
@@ -45,18 +44,21 @@ const RegistrationForm = () => {
         const imageRef = ref(storage, `invoices/${userId}`);
         //uploading to storage using reference and the image you want to upload
         uploadBytes(imageRef, imageUpload).then((res) => {
-            console.log(res.metadata.fullPath);
+            getDownloadURL(imageRef).then(async (url) => {
+                //add imageUrl field to this data
+                const userDoc = doc(db, "users", userId);
+                await updateDoc(userDoc, { imageUrl: url });
+            });
         }); // returns promise
     };
 
     //add user
-    const addUser = async (e) => {
+    const addUser = (e) => {
         e.preventDefault();
         //getting data of submitted form
         if (isVerified) {
             // submit the form
             addDoc(usersCollectionRef, data).then((res) => {
-                console.log(res.id);
                 uploadImage(res.id);
             });
             navigate("/confirmation", { state: { data } });
