@@ -7,7 +7,8 @@ import {
     updateDoc,
     deleteDoc,
 } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { db, storage } from "../firebase-config";
+import { ref, getDownloadURL } from "firebase/storage";
 import { Container, Table, Button } from "react-bootstrap";
 import PasscodeInput from "./PasscodeInput";
 import { scale } from "../Helpers";
@@ -25,6 +26,9 @@ function App() {
 
     // const [loading, setLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
+
+    //images state
+    const [imageUrl, setImageUrl] = useState("");
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -81,7 +85,6 @@ function App() {
                 setTimeout(function () {
                     if (i < 50) {
                         setLoadingProgress(scale(i, 0, 50, 0, 50).toFixed(0));
-                        console.log(i);
                         i++;
                         artificialLoading();
                     } else {
@@ -111,6 +114,7 @@ function App() {
                                 <th>Racquets</th>
                                 <th>Level</th>
                                 <th>Payment</th>
+                                <th>Invoice</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -142,6 +146,16 @@ function App() {
         }
     };
 
+    const getInvoice = (userId) => {
+        const imageRef = ref(storage, `invoices/${userId}`);
+        getDownloadURL(imageRef).then((url) => {
+            console.log(url);
+            setImageUrl(url);
+        });
+    };
+
+    getInvoice("ozQGfhGGHCIVyFM3DxMh");
+
     const renderParticipants = () => {
         if (users.length > 0) {
             return users.map((user) => (
@@ -153,6 +167,9 @@ function App() {
                     <td>{user.phone}</td>
                     <td>{user.racquets}</td>
                     <td>{user.level}</td>
+                    <td>
+                        <img src={imageUrl} alt={`${user.name} invoice`} />
+                    </td>
                     <td>{user.paid ? "Paid" : "Unpaid"}</td>
                     <td>
                         <Button

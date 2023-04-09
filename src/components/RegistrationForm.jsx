@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { db, storage } from "../firebase-config";
+
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "./FormDetails";
 
@@ -23,6 +27,8 @@ const RegistrationForm = () => {
         paid: false,
     });
 
+    const [imageUpload, setImageUpload] = useState(null);
+
     const usersCollectionRef = collection(db, "users");
 
     const updateData = (e) => {
@@ -33,14 +39,26 @@ const RegistrationForm = () => {
         });
     };
 
+    const uploadImage = (userId) => {
+        if (imageUpload == null) return;
+        //creating folder inside storage for images
+        const imageRef = ref(storage, `invoices/${userId}`);
+        //uploading to storage using reference and the image you want to upload
+        uploadBytes(imageRef, imageUpload).then((res) => {
+            console.log(res.metadata.fullPath);
+        }); // returns promise
+    };
+
     //add user
     const addUser = async (e) => {
         e.preventDefault();
         //getting data of submitted form
         if (isVerified) {
             // submit the form
-            console.log(data);
-            await addDoc(usersCollectionRef, data);
+            addDoc(usersCollectionRef, data).then((res) => {
+                console.log(res.id);
+                uploadImage(res.id);
+            });
             navigate("/confirmation", { state: { data } });
         } else {
             alert("Please verify that you are not a robot.");
@@ -53,6 +71,8 @@ const RegistrationForm = () => {
             setIsVerified(true);
         }
     };
+
+    useEffect(() => {});
 
     return (
         <>
@@ -158,8 +178,14 @@ const RegistrationForm = () => {
                         </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="level">
-                        <Form.Label>Payment invoice upload</Form.Label>
-                        <h6>TBA v1.x</h6>
+                        <Form.Label className="required">
+                            Payment invoice upload
+                        </Form.Label>
+                        <Form.Control
+                            onChange={(e) => setImageUpload(e.target.files[0])}
+                            type="file"
+                            required
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <ReCAPTCHA
