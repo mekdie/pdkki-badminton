@@ -161,13 +161,13 @@ function App() {
                         <td>{user.phone}</td>
                         <td>{user.racquets}</td>
                         <td>{user.level}</td>
+                        <td>{user.paid ? "Paid" : "Unpaid"}</td>
                         <td className="table-cell-image">
                             <img
                                 src={user.imageUrl}
                                 alt={`${user.name} invoice`}
                             />
                         </td>
-                        <td>{user.paid ? "Paid" : "Unpaid"}</td>
                         <td>
                             <Button
                                 onClick={() => updateUser(user.id, user.paid)}
