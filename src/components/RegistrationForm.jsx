@@ -74,21 +74,8 @@ const RegistrationForm = () => {
         }
     };
 
-    useEffect(() => {});
-
     return (
         <>
-            {/* <a className="btn btn-link" href="login.html">
-                Log In (Admin)
-            </a>
-            <a className="btn btn-link" href="index.html">
-                Registration Form
-            </a>
-            <a className="btn btn-link" href="participants.html">
-                {" "}
-                Participants{" "}
-            </a> */}
-            {/* <button className="btn toggle">Dark Mode</button> */}
             <Container>
                 <Form onSubmit={addUser}>
                     <FormDetails />
