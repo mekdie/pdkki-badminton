@@ -6,10 +6,11 @@ import {
     doc,
     updateDoc,
     deleteDoc,
+    deleteAll,
 } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
 import { ref, deleteObject } from "firebase/storage";
-import { Container, Table, Button } from "react-bootstrap";
+import { Container, Table, Button, Modal } from "react-bootstrap";
 import PasscodeInput from "./PasscodeInput";
 import { scale } from "../Helpers";
 //react loading
@@ -26,6 +27,9 @@ function App() {
 
     // const [loading, setLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
+
+    //modal state
+    const [showModal, setShowModal] = useState(false);
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -77,6 +81,30 @@ function App() {
 
         getUsers();
     };
+
+    //delete all records with modal confirmation
+    const deleteAll = async () => {
+        setShowModal(false);
+        const deleteImgId = [];
+
+        const data = await getDocs(usersCollectionRef);
+        data.forEach(async (d) => {
+            const userDoc = doc(db, "users", d.id);
+            deleteImgId.push(d.id);
+            await deleteDoc(userDoc);
+        });
+
+        //delete image from database
+        deleteImgId.forEach((item) => {
+            const imageRef = ref(storage, `invoices/${item}`);
+            deleteObject(imageRef).then(() => {
+                console.log("user deleted");
+            });
+        });
+
+        getUsers();
+    };
+
     const handlePasscodeSubmit = (e, inputValue) => {
         e.preventDefault();
         if (inputValue === passcode) {
@@ -124,7 +152,7 @@ function App() {
                         <tbody>
                             {loadingProgress !== 100 ? (
                                 <tr className="align-middle text-center">
-                                    <td colSpan={9}>
+                                    <td colSpan={10}>
                                         <ReactLoading
                                             id="loadingParticipants"
                                             type="bars"
@@ -136,6 +164,16 @@ function App() {
                                 renderParticipants()
                             )}
                         </tbody>
+                        {users.length > 0 && (
+                            <caption>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => setShowModal(true)}
+                                >
+                                    Delete all records
+                                </Button>
+                            </caption>
+                        )}
                     </Table>
                 </>
             );
@@ -185,18 +223,44 @@ function App() {
         } else {
             return (
                 <tr className="align-middle text-center">
-                    <td colSpan={9}>No participants found</td>
+                    <td colSpan={10}>No participants found</td>
                 </tr>
             );
         }
     };
-
+    // temporary confirmation modal, soon needs to be in a different components file
+    const removeAllModal = () => {
+        return (
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="alert alert-danger">
+                        Are you sure you want to delete all the records?
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="default"
+                        onClick={() => setShowModal(false)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={deleteAll}>
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    };
     return (
         <div className="App">
             <Container className="participants-container">
                 <div className="row justify-content-center">
                     {renderElements()}
                 </div>
+                {removeAllModal()}
             </Container>
         </div>
     );
