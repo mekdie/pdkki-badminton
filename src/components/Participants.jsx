@@ -6,7 +6,6 @@ import {
     doc,
     updateDoc,
     deleteDoc,
-    deleteAll,
 } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
 import { ref, deleteObject } from "firebase/storage";
@@ -30,6 +29,10 @@ function App() {
 
     //modal state
     const [showModal, setShowModal] = useState(false);
+
+    //invoice
+    const [currentInvoice, setCurrentInvoice] = useState(null);
+    const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -200,20 +203,29 @@ function App() {
                         <td>{user.racquets}</td>
                         <td>{user.level}</td>
                         <td>{user.paid ? "Paid" : "Unpaid"}</td>
-                        <td className="table-cell-image">
+                        <td
+                            onClick={() => {
+                                setShowInvoiceModal(true);
+                                setCurrentInvoice(user);
+                            }}
+                            className="table-cell-image"
+                        >
                             <img
                                 src={user.imageUrl}
                                 alt={`${user.name} invoice`}
                             />
                         </td>
                         <td>
-                            <Button
+                            {/* <Button
                                 onClick={() => updateUser(user.id, user.paid)}
                                 variant={user.paid ? "dark" : "success"}
                             >
                                 {user.paid ? "Unpaid" : "Paid"}
-                            </Button>
-                            <Button onClick={() => deleteUser(user.id)}>
+                            </Button> */}
+                            <Button
+                                variant="danger"
+                                onClick={() => deleteUser(user.id)}
+                            >
                                 Delete
                             </Button>
                         </td>
@@ -254,6 +266,56 @@ function App() {
             </Modal>
         );
     };
+
+    const invoiceModal = () => {
+        if (currentInvoice) {
+            return (
+                <Modal
+                    show={showInvoiceModal}
+                    onHide={() => setShowInvoiceModal(false)}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            {currentInvoice.name}'s invoice
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {/* <h4>Centered Modal</h4> */}
+                        <img
+                            style={{ maxWidth: "-webkit-fill-available" }}
+                            src={currentInvoice.imageUrl}
+                            alt={`${currentInvoice.name}'s invoice `}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="default"
+                            onClick={() => setShowInvoiceModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant={currentInvoice.paid ? "danger" : "success"}
+                            onClick={() => {
+                                updateUser(
+                                    currentInvoice.id,
+                                    currentInvoice.paid
+                                );
+                                setShowInvoiceModal(false);
+                            }}
+                        >
+                            {currentInvoice.paid
+                                ? "Cancel payment"
+                                : "Confirm payment"}
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            );
+        }
+    };
     return (
         <div className="App">
             <Container className="participants-container">
@@ -261,6 +323,7 @@ function App() {
                     {renderElements()}
                 </div>
                 {removeAllModal()}
+                {invoiceModal()}
             </Container>
         </div>
     );
