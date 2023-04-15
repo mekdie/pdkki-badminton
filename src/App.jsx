@@ -1,9 +1,9 @@
-import ConfirmationForm from "./components/ConfirmationForm";
-import RegistrationForm from "./components/RegistrationForm";
-import Participants from "./components/Participants";
+import ConfirmationForm from "./pages/ConfirmationForm";
+import RegistrationForm from "./pages/RegistrationForm";
+import Participants from "./pages/Participants";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./components/Footer";
-import NotFound from "./components/NotFound";
+import NotFound from "./pages/NotFound";
 import NavigationBar from "./components/NavigationBar";
 function App() {
     return (

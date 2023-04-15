@@ -10,7 +10,7 @@ import {
 import { db, storage } from "../firebase-config";
 import { ref, deleteObject } from "firebase/storage";
 import { Container, Table, Button, Modal } from "react-bootstrap";
-import PasscodeInput from "./PasscodeInput";
+import PasscodeInput from "../components/PasscodeInput";
 import { scale } from "../Helpers";
 //react loading
 import ReactLoading from "react-loading";
@@ -137,6 +137,7 @@ function App() {
         if (passcodeFlag) {
             return (
                 <>
+                    <h2>Participants' Registration</h2>
                     <Table responsive striped bordered hover>
                         <thead>
                             <tr>

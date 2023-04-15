@@ -13,7 +13,7 @@ function NavigationBar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
                         <Nav.Link as={NavLink} to="/">
-                            Home
+                            Registration
                         </Nav.Link>
                         <Nav.Link as={NavLink} to="/about" disabled>
                             About

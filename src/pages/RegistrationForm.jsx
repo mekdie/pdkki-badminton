@@ -5,7 +5,7 @@ import { db, storage } from "../firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { Button, Container, Form } from "react-bootstrap";
-import FormDetails from "./FormDetails";
+import FormDetails from "../components/FormDetails";
 
 import { useNavigate, Link } from "react-router-dom";
 
