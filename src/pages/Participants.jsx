@@ -224,6 +224,15 @@ function App() {
                                 {user.paid ? "Unpaid" : "Paid"}
                             </Button> */}
                             <Button
+                                variant="info"
+                                onClick={() => {
+                                    setShowInvoiceModal(true);
+                                    setCurrentInvoice(user);
+                                }}
+                            >
+                                View
+                            </Button>
+                            <Button
                                 variant="danger"
                                 onClick={() => deleteUser(user.id)}
                             >
@@ -286,7 +295,7 @@ function App() {
                     <Modal.Body>
                         {/* <h4>Centered Modal</h4> */}
                         <img
-                            style={{ maxWidth: "-webkit-fill-available" }}
+                            className="w-100"
                             src={currentInvoice.imageUrl}
                             alt={`${currentInvoice.name}'s invoice `}
                         />

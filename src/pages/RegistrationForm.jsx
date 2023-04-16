@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { collection, doc, addDoc, updateDoc, upd } from "firebase/firestore";
+import { useState } from "react";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -7,7 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Button, Container, Form } from "react-bootstrap";
 import FormDetails from "../components/FormDetails";
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //recaptcha
 import ReCAPTCHA from "react-google-recaptcha";
@@ -27,6 +27,7 @@ const RegistrationForm = () => {
     });
 
     const [imageUpload, setImageUpload] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState("");
 
     const usersCollectionRef = collection(db, "users");
 
@@ -50,6 +51,8 @@ const RegistrationForm = () => {
                 await updateDoc(userDoc, { imageUrl: url });
             });
         }); // returns promise
+        //once the upload is done, go to this page, might need to add loading here
+        navigate("/confirmation", { state: { data } });
     };
 
     //add user
@@ -61,7 +64,6 @@ const RegistrationForm = () => {
             addDoc(usersCollectionRef, data).then((res) => {
                 uploadImage(res.id);
             });
-            navigate("/confirmation", { state: { data } });
         } else {
             alert("Please verify that you are not a robot.");
         }
@@ -74,6 +76,21 @@ const RegistrationForm = () => {
         }
     };
 
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        setImageUpload(file);
+
+        // Create a FileReader object
+        const reader = new FileReader();
+
+        // Set a callback function to be called when the file is loaded
+        reader.onload = () => {
+            setPreviewUrl(reader.result);
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    };
     return (
         <>
             <Container>
@@ -171,10 +188,17 @@ const RegistrationForm = () => {
                             Payment invoice upload
                         </Form.Label>
                         <Form.Control
-                            onChange={(e) => setImageUpload(e.target.files[0])}
+                            onChange={handleImageUpload}
                             type="file"
                             required
                         />
+                        {previewUrl && (
+                            <img
+                                src={previewUrl}
+                                alt="preview"
+                                className="w-100 text-center mt-3"
+                            />
+                        )}
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <ReCAPTCHA
