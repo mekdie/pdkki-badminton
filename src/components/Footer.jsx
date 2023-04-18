@@ -19,7 +19,7 @@ const Footer = () => {
                         Mekdie
                     </a>{" "}
                     <span className="text-nowrap">
-                        All rights reserved. - Version 1.4.2 Alpha
+                        All rights reserved. - Version 1.4.3 Alpha UNSTABLE
                     </span>
                 </p>
             </Container>
