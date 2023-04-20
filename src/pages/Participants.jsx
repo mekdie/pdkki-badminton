@@ -39,6 +39,7 @@ function App() {
 
     //modal props for single delete
     const [deletedId, setDeletedId] = useState(null);
+    const [deleteType, setDeleteType] = useState(null);
     // const [modalProps, setModalProps] = useState({});
     const [showModalSingle, setShowModalSingle] = useState(false);
 
@@ -79,15 +80,25 @@ function App() {
         getUsers();
     };
 
-    // Modal for deleting single user
-    const deleteModal = (id) => {
-        if (showModalSingle) {
-            setShowModalSingle(false);
-        } else {
-            setShowModalSingle(true);
-        }
+    // Modals for deleting single user / multiple users
+    const deleteModal = (id, type) => {
+        //types param:
+        // - type 1: single delete record
+        // - type 2 : multiple delete records
 
-        setDeletedId(id);
+        if (type === 1) {
+            if (showModalSingle) {
+                setShowModalSingle(false);
+            } else {
+                setShowModalSingle(true);
+            }
+
+            setDeletedId(id);
+            setDeleteType(1);
+        } else if (type === 2) {
+            console.log("multiple delete here");
+            setShowModal(true);
+        }
 
         // setModalProps({
         //     showModal: true,
@@ -107,15 +118,22 @@ function App() {
 
     // Actual delete user function that is called from the ConfirmationModal props
     const deleteUser = async () => {
-        if (deletedId) {
-            const userDoc = doc(db, "users", deletedId);
-            await deleteDoc(userDoc);
-            //delete image from database
-            const imageRef = ref(storage, `invoices/${deletedId}`);
-            deleteObject(imageRef).then(() => {
-                console.log("user deleted");
-            });
-            setShowModalSingle(false);
+        //single delete
+        if (deleteType === 1) {
+            if (deletedId) {
+                const userDoc = doc(db, "users", deletedId);
+                await deleteDoc(userDoc);
+                //delete image from database
+                const imageRef = ref(storage, `invoices/${deletedId}`);
+                deleteObject(imageRef).then(() => {
+                    console.log("user deleted");
+                });
+                setShowModalSingle(false);
+            }
+        }
+        //multiple delete
+        else {
+            console.log("deleting multiple delete here");
         }
 
         getUsers();
@@ -270,7 +288,7 @@ function App() {
                             </Button>
                             <Button
                                 variant="danger"
-                                onClick={() => deleteModal(user.id)}
+                                onClick={() => deleteModal(user.id, 1)}
                             >
                                 Delete
                             </Button>
@@ -375,7 +393,7 @@ function App() {
                 <ConfirmationModal
                     showModal={showModalSingle}
                     onHide={() => setShowModalSingle(false)}
-                    confirm={() => deleteUser(deletedId)}
+                    confirm={() => deleteUser()}
                     message="Are you sure you want to delete this
                     record?"
                     title="Delete record"
