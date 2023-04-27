@@ -37,11 +37,13 @@ function App() {
     const [currentInvoice, setCurrentInvoice] = useState(null);
     const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
-    //modal props for single delete
-    const [deletedId, setDeletedId] = useState(null);
-    const [deleteType, setDeleteType] = useState(null);
-    // const [modalProps, setModalProps] = useState({});
-    const [showModalSingle, setShowModalSingle] = useState(false);
+    //modal states consists of delete information, type, and message
+    const [deleteInfo, setDeleteInfo] = useState({
+        title: "",
+        message: "",
+        deleteId: null,
+        type: null,
+    });
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -81,23 +83,37 @@ function App() {
     };
 
     // Modals for deleting single user / multiple users
-    const deleteModal = (id, type) => {
+    const deleteModal = ({ id, type }) => {
         //types param:
         // - type 1: single delete record
         // - type 2 : multiple delete records
 
         if (type === 1) {
-            if (showModalSingle) {
-                setShowModalSingle(false);
+            if (showModal) {
+                setShowModal(false);
             } else {
-                setShowModalSingle(true);
+                setShowModal(true);
             }
 
-            setDeletedId(id);
-            setDeleteType(1);
+            setDeleteInfo({
+                ...deleteInfo,
+                title: "Delete a record",
+                message: "Are you sure you want to delete this user?",
+                deleteId: id,
+                type: 1,
+            });
         } else if (type === 2) {
-            console.log("multiple delete here");
-            setShowModal(true);
+            if (showModal) {
+                setShowModal(false);
+            } else {
+                setShowModal(true);
+            }
+            setDeleteInfo({
+                ...deleteInfo,
+                title: "Delete all records",
+                message: "Are you sure you want to delete all the records?",
+                type: 2,
+            });
         }
 
         // setModalProps({
@@ -119,45 +135,45 @@ function App() {
     // Actual delete user function that is called from the ConfirmationModal props
     const deleteUser = async () => {
         //single delete
-        if (deleteType === 1) {
-            if (deletedId) {
-                const userDoc = doc(db, "users", deletedId);
+        if (deleteInfo.type === 1) {
+            console.log("single delete");
+            if (deleteInfo.deleteId) {
+                const userDoc = doc(db, "users", deleteInfo.deleteId);
                 await deleteDoc(userDoc);
                 //delete image from database
-                const imageRef = ref(storage, `invoices/${deletedId}`);
+                const imageRef = ref(
+                    storage,
+                    `invoices/${deleteInfo.deleteId}`
+                );
                 deleteObject(imageRef).then(() => {
                     console.log("user deleted");
                 });
-                setShowModalSingle(false);
+                setShowModal(false);
+            } else {
+                console.error("User not found");
             }
         }
         //multiple delete
         else {
-            console.log("deleting multiple delete here");
-        }
+            console.log("multiple delete");
+            const deleteImgId = [];
 
-        getUsers();
-    };
-
-    //delete all records with modal confirmation
-    const deleteAll = async () => {
-        setShowModal(false);
-        const deleteImgId = [];
-
-        const data = await getDocs(usersCollectionRef);
-        data.forEach(async (d) => {
-            const userDoc = doc(db, "users", d.id);
-            deleteImgId.push(d.id);
-            await deleteDoc(userDoc);
-        });
-
-        //delete image from database
-        deleteImgId.forEach((item) => {
-            const imageRef = ref(storage, `invoices/${item}`);
-            deleteObject(imageRef).then(() => {
-                console.log("user deleted");
+            const data = await getDocs(usersCollectionRef);
+            data.forEach(async (d) => {
+                const userDoc = doc(db, "users", d.id);
+                deleteImgId.push(d.id);
+                await deleteDoc(userDoc);
             });
-        });
+
+            //delete image from database
+            deleteImgId.forEach((item) => {
+                const imageRef = ref(storage, `invoices/${item}`);
+                deleteObject(imageRef).then(() => {
+                    console.log("users deleted");
+                });
+            });
+            setShowModal(false);
+        }
 
         getUsers();
     };
@@ -226,7 +242,7 @@ function App() {
                             <caption>
                                 <Button
                                     variant="danger"
-                                    onClick={() => setShowModal(true)}
+                                    onClick={() => deleteModal({ type: 2 })}
                                 >
                                     Delete all records
                                 </Button>
@@ -288,7 +304,9 @@ function App() {
                             </Button>
                             <Button
                                 variant="danger"
-                                onClick={() => deleteModal(user.id, 1)}
+                                onClick={() =>
+                                    deleteModal({ id: user.id, type: 1 })
+                                }
                             >
                                 Delete
                             </Button>
@@ -303,32 +321,6 @@ function App() {
                 </tr>
             );
         }
-    };
-    // temporary confirmation modal, soon needs to be in a different components file
-    const removeAllModal = () => {
-        return (
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Delete Confirmation</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="alert alert-danger">
-                        Are you sure you want to delete all the records?
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        variant="default"
-                        onClick={() => setShowModal(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button variant="danger" onClick={deleteAll}>
-                        Confirm
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        );
     };
 
     const invoiceModal = () => {
@@ -387,16 +379,14 @@ function App() {
                 <div className="row justify-content-center">
                     {renderElements()}
                 </div>
-                {removeAllModal()}
                 {invoiceModal()}
 
                 <ConfirmationModal
-                    showModal={showModalSingle}
-                    onHide={() => setShowModalSingle(false)}
+                    showModal={showModal}
+                    onHide={() => setShowModal(false)}
                     confirm={() => deleteUser()}
-                    message="Are you sure you want to delete this
-                    record?"
-                    title="Delete record"
+                    title={deleteInfo.title}
+                    message={deleteInfo.message}
                 />
                 {/* <ConfirmationModal
                     onHide={() => setShowModal(false)}

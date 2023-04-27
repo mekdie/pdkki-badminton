@@ -13,7 +13,7 @@ const ConfirmationForm = () => {
                     {" "}
                     <h3>PDKKI Badminton Registration &#127992;</h3>
                     <hr />
-                    <div class="vHW8K">
+                    <div>
                         Thank you for RSVP :) Your submitted form: <br />
                         <br />
                         <Table striped bordered hover>

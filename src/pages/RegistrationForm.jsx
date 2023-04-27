@@ -76,6 +76,7 @@ const RegistrationForm = () => {
         }
     };
 
+    //preview image when uploading
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         setImageUpload(file);
