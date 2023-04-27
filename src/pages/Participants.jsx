@@ -18,7 +18,12 @@ import ReactLoading from "react-loading";
 //Modal components
 import ConfirmationModal from "../components/ConfirmationModal";
 
-function App() {
+//FontAwesome Icon
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
+function Participants() {
     const [users, setUsers] = useState([]);
 
     const [passcode, setPasscode] = useState(null);
@@ -282,18 +287,33 @@ function App() {
                             className="table-cell-image"
                         >
                             <img
+                                title="Enlarge image"
                                 src={user.imageUrl}
                                 alt={`${user.name} invoice`}
                             />
                         </td>
-                        <td>
+                        <td className="text-center">
                             {/* <Button
                                 onClick={() => updateUser(user.id, user.paid)}
                                 variant={user.paid ? "dark" : "success"}
                             >
                                 {user.paid ? "Unpaid" : "Paid"}
                             </Button> */}
-                            <Button
+                            <span title="View">
+                                <FontAwesomeIcon
+                                    style={{
+                                        marginRight: "0.25rem",
+                                        cursor: "pointer",
+                                    }}
+                                    icon={faEye}
+                                    color="black"
+                                    onClick={() => {
+                                        setShowInvoiceModal(true);
+                                        setCurrentInvoice(user);
+                                    }}
+                                />
+                            </span>
+                            {/* <Button
                                 variant="info"
                                 onClick={() => {
                                     setShowInvoiceModal(true);
@@ -301,15 +321,28 @@ function App() {
                                 }}
                             >
                                 View
-                            </Button>
-                            <Button
+                            </Button> */}
+                            <span title="Delete">
+                                <FontAwesomeIcon
+                                    style={{
+                                        marginLeft: "0.25rem",
+                                        cursor: "pointer",
+                                    }}
+                                    icon={faTrash}
+                                    color="black"
+                                    onClick={() =>
+                                        deleteModal({ id: user.id, type: 1 })
+                                    }
+                                />
+                            </span>
+                            {/* <Button
                                 variant="danger"
                                 onClick={() =>
                                     deleteModal({ id: user.id, type: 1 })
                                 }
                             >
                                 Delete
-                            </Button>
+                            </Button> */}
                         </td>
                     </tr>
                 );
@@ -397,4 +430,4 @@ function App() {
     );
 }
 
-export default App;
+export default Participants;
